@@ -1,3 +1,5 @@
+package com.geektrust.learning;
+
 public class Payment_Details {
     private final float no;
     private final float Lumpsum;
