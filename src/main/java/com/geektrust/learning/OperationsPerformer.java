@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OperationsPerformer {
-    float interest, amount, periodInMonths, amountPerMonth, totalAmountWithLumpSum, emiNo, output;
+    float interest, amount, periodInMonths, amountPerMonth, totalAmountWithLumpSum, result;
     HashMap<String, BorrowerDetails> borrowerDetails = new HashMap<>();
     HashMap<String, PaymentDetails> paymentDetails = new HashMap<>();
     ConsoleWriter consoleWriter = new ConsoleWriter();
@@ -32,42 +32,43 @@ public class OperationsPerformer {
     }
 
     public void showBalance(String[] splitInput) {
-        output = 0;
+        result = 0;
         AtomicInteger count = new AtomicInteger(1);
         String bankDetails = splitInput[1] + splitInput[2];
+        float emiNo=Float.parseFloat(splitInput[3]);
         if (borrowerDetails.containsKey(bankDetails) && paymentDetails.containsKey(bankDetails)) {
             PaymentDetails paymentDetails = this.paymentDetails.get(bankDetails);
-            if (Float.parseFloat(splitInput[3]) > paymentDetails.getEmiNo()) {
-                borrowerDetails.forEach((key, value) -> {
-                    if (key.contentEquals(bankDetails)) {
+            if (emiNo > paymentDetails.getEmiNo()) {
+                borrowerDetails.forEach((loanId, borrowerDetails) -> {
+                    if (loanId.contentEquals(bankDetails)) {
                         for (int i = (int) paymentDetails.getEmiNo(); i < Integer.parseInt(splitInput[3]); i++) {
-                            output = paymentDetails.getLumpSum() + value.getAmountPerMonth() * count.get();
+                            result = paymentDetails.getLumpSum() + borrowerDetails.getAmountPerMonth() * count.get();
                             count.getAndIncrement();
                         }
-                        float val = value.getAmount() - output;
-                        float emiLeft = (float) Math.ceil(val / value.getAmountPerMonth());
-                        if (output>value.getAmount()){
+                        float val = borrowerDetails.getAmount() - result;
+                        float emiLeft = (float) Math.ceil(val / borrowerDetails.getAmountPerMonth());
+                        if (result >borrowerDetails.getAmount()){
                             consoleWriter.writeToConsole(splitInput, (int) amount, (int) emiLeft);
                         }
                         else {
-                            consoleWriter.writeToConsole(splitInput, (int) output, (int) emiLeft);
+                            consoleWriter.writeToConsole(splitInput, (int) result, (int) emiLeft);
                         }
                     }
                 });
-            } else if (Float.parseFloat(splitInput[3]) >= paymentDetails.getEmiNo()) {
+            } else if (emiNo >= paymentDetails.getEmiNo()) {
                 borrowerDetails.forEach((key, value) -> {
                     if (key.contentEquals(bankDetails)) {
-                        output = paymentDetails.getLumpSum();
-                        float val = value.getAmount() - output;
+                        result = paymentDetails.getLumpSum();
+                        float val = value.getAmount() - result;
                         float emiLeft = (float) Math.ceil(val / value.getAmountPerMonth());
-                        consoleWriter.writeToConsole(splitInput, (int) output, (int) emiLeft);
+                        consoleWriter.writeToConsole(splitInput, (int) result, (int) emiLeft);
                     }
                 });
             } else {
                 borrowerDetails.forEach((key, value) -> {
                     if (key.contentEquals(bankDetails)) {
-                        float emiLeft = value.getPeriodInMonths() - Float.parseFloat(splitInput[3]);
-                        float output = Float.parseFloat(splitInput[3]) * value.getAmountPerMonth();
+                        float emiLeft = value.getPeriodInMonths() - emiNo;
+                        float output = emiNo * value.getAmountPerMonth();
                         consoleWriter.writeToConsole(splitInput, (int) output, (int) emiLeft);
                     }
                 });
@@ -75,8 +76,8 @@ public class OperationsPerformer {
         } else {
             borrowerDetails.forEach((key, value) -> {
                 if (key.contentEquals(bankDetails)) {
-                    float emiLeft = value.getPeriodInMonths() - Float.parseFloat(splitInput[3]);
-                    float output = Float.parseFloat(splitInput[3]) * value.getAmountPerMonth();
+                    float emiLeft = value.getPeriodInMonths() - emiNo;
+                    float output = emiNo * value.getAmountPerMonth();
                     consoleWriter.writeToConsole(splitInput, (int) output, (int) emiLeft);
                 }
             });
