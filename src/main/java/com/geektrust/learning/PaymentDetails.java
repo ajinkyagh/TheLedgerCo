@@ -2,10 +2,10 @@ package com.geektrust.learning;
 
 public class PaymentDetails {
     private final float emiNo;
-    private final float LumpSum;
+    private final float totalAmountWithLumpSum;
 
     public PaymentDetails(float totalAmountWithLumpSum, float emiNo) {
-        this.LumpSum = totalAmountWithLumpSum;
+        this.totalAmountWithLumpSum = totalAmountWithLumpSum;
         this.emiNo = emiNo;
     }
 
@@ -13,7 +13,7 @@ public class PaymentDetails {
         return emiNo;
     }
 
-    public float getLumpSum() {
-        return LumpSum;
+    public float getTotalAmountWithLumpSum() {
+        return totalAmountWithLumpSum;
     }
 }

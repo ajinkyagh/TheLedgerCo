@@ -3,29 +3,29 @@ package com.geektrust.learning;
 public class BorrowerDetails {
 
     protected final String principal, years, rate;
-    private final float amountPerMonth;
+    private final float totalAmountToPayPerMonth;
     private final float periodInMonths;
-    private final float amount;
+    private final float totalAmountTORepay;
 
-    public BorrowerDetails(String principal, String years, String rate, float amountPerMonth, float periodInMonths, float amount) {
+    public BorrowerDetails(String principal, String years, String rate, float totalAmountToPayPerMonth, float periodInMonths, float totalAmountToRepay) {
         this.principal = principal;
         this.years = years;
         this.rate = rate;
-        this.amountPerMonth = amountPerMonth;
+        this.totalAmountToPayPerMonth = totalAmountToPayPerMonth;
         this.periodInMonths = periodInMonths;
-        this.amount = amount;
+        this.totalAmountTORepay = totalAmountToRepay;
     }
 
-    public float getAmountPerMonth() {
-        return amountPerMonth;
+    public float getTotalAmountToPayPerMonth() {
+        return totalAmountToPayPerMonth;
     }
 
     public float getPeriodInMonths() {
         return periodInMonths;
     }
 
-    public float getAmount() {
-        return amount;
+    public float getTotalAmountTORepay() {
+        return totalAmountTORepay;
     }
 
 

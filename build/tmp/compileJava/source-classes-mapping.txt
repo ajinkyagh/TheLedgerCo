@@ -1,13 +1,13 @@
 com/geektrust/learning/Geektrust.java
  com.geektrust.learning.Geektrust
-com/geektrust/learning/BorrowerDetails.java
- com.geektrust.learning.BorrowerDetails
+com/geektrust/learning/ConsoleWriter.java
+ com.geektrust.learning.ConsoleWriter
 com/geektrust/learning/PaymentDetails.java
  com.geektrust.learning.PaymentDetails
 com/geektrust/learning/FileReader.java
  com.geektrust.learning.FileReader
-com/geektrust/learning/ConsoleWriter.java
- com.geektrust.learning.ConsoleWriter
+com/geektrust/learning/BorrowerDetails.java
+ com.geektrust.learning.BorrowerDetails
 com/geektrust/learning/OperationsPerformer.java
  com.geektrust.learning.OperationsPerformer
 com/geektrust/learning/OperationSelector.java
