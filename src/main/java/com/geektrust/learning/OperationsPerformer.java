@@ -35,9 +35,9 @@ public class OperationsPerformer {
         AtomicInteger count = new AtomicInteger(1);
         String bankName=splitInput[1],borrowerName=splitInput[2],bankDetails = bankName+borrowerName;;
         float emiNo=Float.parseFloat(splitInput[3]);
-        if (borrowerDetails.containsKey(bankDetails) && paymentDetails.containsKey(bankDetails)) {
+        if (hasPaidInstallments(bankDetails)) {
             PaymentDetails paymentDetails = this.paymentDetails.get(bankDetails);
-            if (emiNo > paymentDetails.getEmiNo()) {
+            if (isPaymentCalculationForFutureMonth(emiNo, paymentDetails.getEmiNo())) {
                 borrowerDetails.forEach((loanId, borrowerDetails) -> {
                     if (loanId.contentEquals(bankDetails)) {
                         for (int i = (int) paymentDetails.getEmiNo(); i < Integer.parseInt(splitInput[3]); i++) {
@@ -54,7 +54,7 @@ public class OperationsPerformer {
                         }
                     }
                 });
-            } else if (emiNo >= paymentDetails.getEmiNo()) {
+            } else if (isForCurrentMonth(emiNo, paymentDetails)) {
                 borrowerDetails.forEach((key, value) -> {
                     if (key.contentEquals(bankDetails)) {
                         totalAmountPaidSoFar = paymentDetails.getTotalAmountWithLumpSum();
@@ -81,5 +81,17 @@ public class OperationsPerformer {
                 }
             });
         }
+    }
+
+    private boolean isForCurrentMonth(float emiNo, PaymentDetails paymentDetails) {
+        return emiNo >= paymentDetails.getEmiNo();
+    }
+
+    private boolean isPaymentCalculationForFutureMonth(float emiNo, float emiNo2) {
+        return emiNo > emiNo2;
+    }
+
+    private boolean hasPaidInstallments(String bankDetails) {
+        return borrowerDetails.containsKey(bankDetails) && paymentDetails.containsKey(bankDetails);
     }
 }
