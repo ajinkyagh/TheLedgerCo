@@ -1,6 +1,9 @@
 package com.geektrust.learning;
+import com.geektrust.learning.paymentCalculators.FuturePaymentCalculator;
+import com.geektrust.learning.paymentCalculators.PaidInstallmentPaymentCalculator;
+
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class OperationsPerformer {
     float interest, totalAmountToRepay, periodInMonths, totalAmountToPayPerMonth, totalAmountWithLumpSum, totalAmountPaidSoFar;
@@ -32,58 +35,30 @@ public class OperationsPerformer {
 
     public void showBalance(String[] splitInput) {
         totalAmountPaidSoFar = 0;
-        AtomicInteger count = new AtomicInteger(1);
         String bankName=splitInput[1],borrowerName=splitInput[2],bankDetails = bankName+borrowerName;;
         float emiNo=Float.parseFloat(splitInput[3]);
+        BorrowerDetails currentBorrowerDetails = getCurrentBorrowerDetails(bankDetails);
         if (hasPaidInstallments(bankDetails)) {
-            PaymentDetails paymentDetails = this.paymentDetails.get(bankDetails);
-            if (isPaymentCalculationForFutureMonth(emiNo, paymentDetails.getEmiNo())) {
-                borrowerDetails.forEach((loanId, borrowerDetails) -> {
-                    if (loanId.contentEquals(bankDetails)) {
-                        for (int i = (int) paymentDetails.getEmiNo(); i < Integer.parseInt(splitInput[3]); i++) {
-                            totalAmountPaidSoFar = paymentDetails.getTotalAmountWithLumpSum() + borrowerDetails.getTotalAmountToPayPerMonth() * count.get();
-                            count.getAndIncrement();
-                        }
-                        float totalAmountLeft = borrowerDetails.getTotalAmountTORepay() - totalAmountPaidSoFar;
-                        float emiLeft = (float) Math.ceil(totalAmountLeft / borrowerDetails.getTotalAmountToPayPerMonth());
-                        if (totalAmountPaidSoFar >borrowerDetails.getTotalAmountTORepay()){
-                            consoleWriter.writeToConsole(splitInput, (int) totalAmountToRepay, (int) emiLeft);
-                        }
-                        else {
-                            consoleWriter.writeToConsole(splitInput, (int) totalAmountPaidSoFar, (int) emiLeft);
-                        }
-                    }
-                });
-            } else if (isForCurrentMonth(emiNo, paymentDetails)) {
-                borrowerDetails.forEach((key, value) -> {
-                    if (key.contentEquals(bankDetails)) {
-                        totalAmountPaidSoFar = paymentDetails.getTotalAmountWithLumpSum();
-                        float totalAmountLeft = value.getTotalAmountTORepay() - totalAmountPaidSoFar;
-                        float emiLeft = (float) Math.ceil(totalAmountLeft / value.getTotalAmountToPayPerMonth());
-                        consoleWriter.writeToConsole(splitInput, (int) totalAmountPaidSoFar, (int) emiLeft);
-                    }
-                });
-            } else {
-                borrowerDetails.forEach((key, value) -> {
-                    if (key.contentEquals(bankDetails)) {
-                        float emiLeft = value.getPeriodInMonths() - emiNo;
-                        float totalAmountPaidSoFar = emiNo * value.getTotalAmountToPayPerMonth();
-                        consoleWriter.writeToConsole(splitInput, (int) totalAmountPaidSoFar, (int) emiLeft);
-                    }
-                });
-            }
+            new PaidInstallmentPaymentCalculator(currentBorrowerDetails, this.paymentDetails.get(bankDetails),
+                    emiNo, consoleWriter, splitInput).calculate();
         } else {
-            borrowerDetails.forEach((key, value) -> {
-                if (key.contentEquals(bankDetails)) {
-                    float emiLeft = value.getPeriodInMonths() - emiNo;
-                    float totalAmountPaidSoFar = emiNo * value.getTotalAmountToPayPerMonth();
-                    consoleWriter.writeToConsole(splitInput, (int) totalAmountPaidSoFar, (int) emiLeft);
-                }
-            });
+            float emiLeft = currentBorrowerDetails.getPeriodInMonths() - emiNo;
+            float totalAmountPaidSoFar = emiNo * currentBorrowerDetails.getTotalAmountToPayPerMonth();
+            consoleWriter.writeToConsole(splitInput, (int) totalAmountPaidSoFar, (int) emiLeft);
         }
     }
 
-    private boolean isForCurrentMonth(float emiNo, PaymentDetails paymentDetails) {
+    private BorrowerDetails getCurrentBorrowerDetails(String bankDetails) {
+        AtomicReference<BorrowerDetails> currentBorrower = new AtomicReference<>();
+        borrowerDetails.forEach((loanId, currentBorrowerDetails) -> {
+            if (loanId.contentEquals(bankDetails)) {
+                currentBorrower.set(currentBorrowerDetails);
+            }
+        });
+        return currentBorrower.get();
+    }
+
+    private boolean isPaymentCalculationForCurrentMonth(float emiNo, PaymentDetails paymentDetails) {
         return emiNo >= paymentDetails.getEmiNo();
     }
 
