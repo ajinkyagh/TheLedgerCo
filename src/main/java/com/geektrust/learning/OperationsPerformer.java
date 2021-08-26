@@ -1,5 +1,5 @@
 package com.geektrust.learning;
-import com.geektrust.learning.paymentCalculators.FuturePaymentCalculator;
+
 import com.geektrust.learning.paymentCalculators.PaidInstallmentPaymentCalculator;
 
 import java.util.HashMap;
@@ -12,9 +12,9 @@ public class OperationsPerformer {
     ConsoleWriter consoleWriter = new ConsoleWriter();
 
     public void takeLoan(String[] splitInput) {
-        String bankName=splitInput[1],borrowerName=splitInput[2],bankDetails = bankName+borrowerName;
-        float principal=Float.parseFloat(splitInput[3]),timePeriod=Float.parseFloat(splitInput[4]),rate=Float.parseFloat(splitInput[5]);
-        interest = principal*timePeriod*rate / 100;
+        String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
+        float principal = Float.parseFloat(splitInput[3]), timePeriod = Float.parseFloat(splitInput[4]), rate = Float.parseFloat(splitInput[5]);
+        interest = principal * timePeriod * rate / 100;
         totalAmountToRepay = interest + principal;
         periodInMonths = timePeriod * 12;
         totalAmountToPayPerMonth = (float) Math.ceil(totalAmountToRepay / periodInMonths);
@@ -22,8 +22,9 @@ public class OperationsPerformer {
     }
 
     public void makeLumpSumPayment(String[] splitInput) {
-        String bankName=splitInput[1],borrowerName=splitInput[2],bankDetails = bankName+borrowerName;;
-        float lumpSum=Float.parseFloat(splitInput[3]),emiNumber=Float.parseFloat(splitInput[4]);
+        String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
+        ;
+        float lumpSum = Float.parseFloat(splitInput[3]), emiNumber = Float.parseFloat(splitInput[4]);
 
         borrowerDetails.forEach((loanId, borrowerDetails) -> {
             if (loanId.contentEquals(bankDetails)) {
@@ -35,17 +36,23 @@ public class OperationsPerformer {
 
     public void showBalance(String[] splitInput) {
         totalAmountPaidSoFar = 0;
-        String bankName=splitInput[1],borrowerName=splitInput[2],bankDetails = bankName+borrowerName;;
-        float emiNo=Float.parseFloat(splitInput[3]);
+        String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
+        ;
+        float emiNo = Float.parseFloat(splitInput[3]);
         BorrowerDetails currentBorrowerDetails = getCurrentBorrowerDetails(bankDetails);
+        int outputAmount, emisLeft;
         if (hasPaidInstallments(bankDetails)) {
-            new PaidInstallmentPaymentCalculator(currentBorrowerDetails, this.paymentDetails.get(bankDetails),
-                    emiNo, consoleWriter, splitInput).calculate();
+            int finalEmiNumber = Integer.parseInt(splitInput[3]);
+            float[] output = new PaidInstallmentPaymentCalculator(currentBorrowerDetails, this.paymentDetails.get(bankDetails),
+                    emiNo, finalEmiNumber).calculate();
+            outputAmount = (int) output[0];
+            emisLeft = (int) output[1];
         } else {
-            float emiLeft = currentBorrowerDetails.getPeriodInMonths() - emiNo;
             float totalAmountPaidSoFar = emiNo * currentBorrowerDetails.getTotalAmountToPayPerMonth();
-            consoleWriter.writeToConsole(splitInput, (int) totalAmountPaidSoFar, (int) emiLeft);
+            emisLeft = (int) (currentBorrowerDetails.getPeriodInMonths() - emiNo);
+            outputAmount = (int) totalAmountPaidSoFar;
         }
+        consoleWriter.writeToConsole(splitInput, outputAmount, emisLeft);
     }
 
     private BorrowerDetails getCurrentBorrowerDetails(String bankDetails) {
@@ -56,14 +63,6 @@ public class OperationsPerformer {
             }
         });
         return currentBorrower.get();
-    }
-
-    private boolean isPaymentCalculationForCurrentMonth(float emiNo, PaymentDetails paymentDetails) {
-        return emiNo >= paymentDetails.getEmiNo();
-    }
-
-    private boolean isPaymentCalculationForFutureMonth(float emiNo, float emiNo2) {
-        return emiNo > emiNo2;
     }
 
     private boolean hasPaidInstallments(String bankDetails) {
