@@ -1,5 +1,7 @@
 package com.geektrust.learning;
 
+import com.geektrust.learning.paymentCalculators.PaymentReceipt;
+
 public class BorrowerDetails {
 
     protected final String principal, years, rate;
@@ -31,5 +33,12 @@ public class BorrowerDetails {
     public PaymentDetails calculatePayment(float lumpSum, float emiNumber) {
        float totalAmountWithLumpSum = lumpSum + (totalAmountToPayPerMonth * emiNumber);
        return new PaymentDetails(totalAmountWithLumpSum, emiNumber);
+    }
+
+    public PaymentReceipt makePayment(float emiNo) {
+
+        float totalAmountPaidSoFar = emiNo * getTotalAmountToPayPerMonth();
+        int emisLeft = (int) (getPeriodInMonths() - emiNo);
+      return  new PaymentReceipt(totalAmountPaidSoFar, emisLeft);
     }
 }

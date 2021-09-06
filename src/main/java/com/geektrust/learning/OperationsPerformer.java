@@ -3,6 +3,7 @@ package com.geektrust.learning;
 import com.geektrust.learning.paymentCalculators.EMI;
 import com.geektrust.learning.paymentCalculators.EMICalculator;
 import com.geektrust.learning.paymentCalculators.PaidInstallmentPaymentCalculator;
+import com.geektrust.learning.paymentCalculators.PaymentReceipt;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -48,9 +49,9 @@ public class OperationsPerformer {
             outputAmount = (int) output[0];
             emisLeft = (int) output[1];
         } else {
-            float totalAmountPaidSoFar = emiNo * currentBorrowerDetails.getTotalAmountToPayPerMonth();
-            emisLeft = (int) (currentBorrowerDetails.getPeriodInMonths() - emiNo);
-            outputAmount = (int) totalAmountPaidSoFar;
+            PaymentReceipt paymentReceipt = currentBorrowerDetails.makePayment(emiNo);
+            outputAmount = (int) paymentReceipt.getTotalAmountPaidSoFar();
+            emisLeft = paymentReceipt.getEmisLeft();
         }
         consoleWriter.writeToConsole(splitInput, outputAmount, emisLeft);
     }
