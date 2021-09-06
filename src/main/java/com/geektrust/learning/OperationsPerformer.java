@@ -23,13 +23,13 @@ public class OperationsPerformer {
 
     public void makeLumpSumPayment(String[] splitInput) {
         String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
-        ;
+
         float lumpSum = Float.parseFloat(splitInput[3]), emiNumber = Float.parseFloat(splitInput[4]);
 
         borrowerDetails.forEach((loanId, borrowerDetails) -> {
             if (loanId.contentEquals(bankDetails)) {
-                totalAmountWithLumpSum = lumpSum + (borrowerDetails.getTotalAmountToPayPerMonth() * emiNumber);
-                paymentDetails.put(bankDetails, new PaymentDetails(totalAmountWithLumpSum, emiNumber));
+                PaymentDetails value = borrowerDetails.calculatePayment(lumpSum, emiNumber);
+                paymentDetails.put(bankDetails, value);
             }
         });
     }

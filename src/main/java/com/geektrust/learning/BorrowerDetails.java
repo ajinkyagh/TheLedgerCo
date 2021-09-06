@@ -28,6 +28,8 @@ public class BorrowerDetails {
         return totalAmountTORepay;
     }
 
-
-
+    public PaymentDetails calculatePayment(float lumpSum, float emiNumber) {
+       float totalAmountWithLumpSum = lumpSum + (totalAmountToPayPerMonth * emiNumber);
+       return new PaymentDetails(totalAmountWithLumpSum, emiNumber);
+    }
 }
