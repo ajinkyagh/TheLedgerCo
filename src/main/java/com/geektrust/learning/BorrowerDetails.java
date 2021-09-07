@@ -1,7 +1,5 @@
 package com.geektrust.learning;
 
-import com.geektrust.learning.paymentCalculators.PaymentReceipt;
-
 public class BorrowerDetails {
 
     protected final String principal, years, rate;
@@ -30,15 +28,17 @@ public class BorrowerDetails {
         return totalAmountTORepay;
     }
 
-    public PaymentDetails calculatePayment(float lumpSum, float emiNumber) {
-       float totalAmountWithLumpSum = lumpSum + (totalAmountToPayPerMonth * emiNumber);
-       return new PaymentDetails(totalAmountWithLumpSum, emiNumber);
+    public PaymentDetails payEMIWithLumpSum(float lumpSum, float emiNumber) {
+        return createPaymentReceipt(lumpSum, emiNumber);
     }
 
-    public PaymentReceipt makePayment(float emiNo) {
+    public PaymentDetails payEMI(float emiNo) {
+        return createPaymentReceipt(0, emiNo);
+    }
 
-        float totalAmountPaidSoFar = emiNo * getTotalAmountToPayPerMonth();
+    private PaymentDetails createPaymentReceipt(float lumpsumAmount, float emiNo){
+        float totalAmountPaidSoFar = lumpsumAmount + (totalAmountToPayPerMonth * emiNo);
         int emisLeft = (int) (getPeriodInMonths() - emiNo);
-      return  new PaymentReceipt(totalAmountPaidSoFar, emisLeft);
+        return new PaymentDetails(totalAmountPaidSoFar, emiNo, emisLeft);
     }
 }

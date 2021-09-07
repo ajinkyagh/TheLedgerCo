@@ -3,7 +3,6 @@ package com.geektrust.learning;
 import com.geektrust.learning.paymentCalculators.EMI;
 import com.geektrust.learning.paymentCalculators.EMICalculator;
 import com.geektrust.learning.paymentCalculators.PaidInstallmentPaymentCalculator;
-import com.geektrust.learning.paymentCalculators.PaymentReceipt;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,7 +28,7 @@ public class OperationsPerformer {
 
         borrowerDetails.forEach((loanId, borrowerDetails) -> {
             if (loanId.contentEquals(bankDetails)) {
-                PaymentDetails value = borrowerDetails.calculatePayment(lumpSum, emiNumber);
+                PaymentDetails value = borrowerDetails.payEMIWithLumpSum(lumpSum, emiNumber);
                 paymentDetails.put(bankDetails, value);
             }
         });
@@ -49,9 +48,9 @@ public class OperationsPerformer {
             outputAmount = (int) output[0];
             emisLeft = (int) output[1];
         } else {
-            PaymentReceipt paymentReceipt = currentBorrowerDetails.makePayment(emiNo);
-            outputAmount = (int) paymentReceipt.getTotalAmountPaidSoFar();
-            emisLeft = paymentReceipt.getEmisLeft();
+            PaymentDetails paymentDetails = currentBorrowerDetails.payEMI(emiNo);
+            outputAmount = (int) paymentDetails.getTotalAmountWithLumpSum();
+            emisLeft =  paymentDetails.getEmiLeft();
         }
         consoleWriter.writeToConsole(splitInput, outputAmount, emisLeft);
     }
