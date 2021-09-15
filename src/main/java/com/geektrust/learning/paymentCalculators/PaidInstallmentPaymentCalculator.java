@@ -20,7 +20,7 @@ public class PaidInstallmentPaymentCalculator {
     public float[] calculate() {
         float[] output = new float[2];
         if (isPaymentCalculationForFutureMonth(emiNo, paymentReceipt.getEmiNo())) {
-            output = new FuturePaymentCalculator(currentLoan, paymentReceipt, finalEmiNumber).calculate();
+            output = new Dues(currentLoan, paymentReceipt, finalEmiNumber).calculate();
         } else if (isPaymentCalculationForCurrentMonth(emiNo, paymentReceipt)) {
             float totalAmountPaidSoFar = paymentReceipt.getTotalAmountWithLumpSum();
             float totalAmountLeft = currentLoan.getTotalAmountTORepay() - totalAmountPaidSoFar;

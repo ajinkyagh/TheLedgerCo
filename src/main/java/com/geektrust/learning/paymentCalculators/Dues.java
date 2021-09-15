@@ -5,12 +5,12 @@ import com.geektrust.learning.PaymentReceipt;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class FuturePaymentCalculator {
+public class Dues {
     private final Loan loan;
     private final PaymentReceipt paymentReceipt;
     private final int finalEmiNumber;
 
-    public FuturePaymentCalculator(Loan loan, PaymentReceipt paymentReceipt, int finalEmiNumber) {
+    public Dues(Loan loan, PaymentReceipt paymentReceipt, int finalEmiNumber) {
         this.loan = loan;
         this.paymentReceipt = paymentReceipt;
         this.finalEmiNumber = finalEmiNumber;
