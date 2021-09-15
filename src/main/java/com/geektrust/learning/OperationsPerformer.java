@@ -8,16 +8,16 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class OperationsPerformer {
-    float interest, totalAmountToRepay, periodInMonths, totalAmountToPayPerMonth, totalAmountWithLumpSum, totalAmountPaidSoFar;
-    HashMap<String, BorrowerDetails> borrowerDetails = new HashMap<>();
-    HashMap<String, PaymentDetails> paymentDetails = new HashMap<>();
+    float totalAmountPaidSoFar;
+    HashMap<String, Loan> borrowerDetails = new HashMap<>();
+    HashMap<String, PaymentReceipt> paymentDetails = new HashMap<>();
     ConsoleWriter consoleWriter = new ConsoleWriter();
 
     public void takeLoan(String[] splitInput) {
         String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
         float principal = Float.parseFloat(splitInput[3]), timePeriod = Float.parseFloat(splitInput[4]), rate = Float.parseFloat(splitInput[5]);
         EMI emi = new EMICalculator(principal, timePeriod, rate).calculate();
-        borrowerDetails.put(bankDetails, new BorrowerDetails(Float.toString(principal), Float.toString(timePeriod), Float.toString(rate), emi.getTotalAmountToRepayPerMonth(), emi.getPeriodInMonths(), emi.getTotalAmountToRepay()));
+        borrowerDetails.put(bankDetails, new Loan(Float.toString(principal), Float.toString(timePeriod), Float.toString(rate), emi.getTotalAmountToRepayPerMonth(), emi.getPeriodInMonths(), emi.getTotalAmountToRepay()));
     }
 
 
@@ -26,9 +26,9 @@ public class OperationsPerformer {
 
         float lumpSum = Float.parseFloat(splitInput[3]), emiNumber = Float.parseFloat(splitInput[4]);
 
-        borrowerDetails.forEach((loanId, borrowerDetails) -> {
+        borrowerDetails.forEach((loanId, loan) -> {
             if (loanId.contentEquals(bankDetails)) {
-                PaymentDetails value = borrowerDetails.payEMIWithLumpSum(lumpSum, emiNumber);
+                PaymentReceipt value = loan.payEMIWithLumpSum(lumpSum, emiNumber);
                 paymentDetails.put(bankDetails, value);
             }
         });
@@ -39,27 +39,27 @@ public class OperationsPerformer {
         String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
         ;
         float emiNo = Float.parseFloat(splitInput[3]);
-        BorrowerDetails currentBorrowerDetails = getCurrentBorrowerDetails(bankDetails);
+        Loan currentLoan = getCurrentBorrowerDetails(bankDetails);
         int outputAmount, emisLeft;
         if (hasPaidInstallments(bankDetails)) {
             int finalEmiNumber = Integer.parseInt(splitInput[3]);
-            float[] output = new PaidInstallmentPaymentCalculator(currentBorrowerDetails, this.paymentDetails.get(bankDetails),
+            float[] output = new PaidInstallmentPaymentCalculator(currentLoan, this.paymentDetails.get(bankDetails),
                     emiNo, finalEmiNumber).calculate();
             outputAmount = (int) output[0];
             emisLeft = (int) output[1];
         } else {
-            PaymentDetails paymentDetails = currentBorrowerDetails.payEMI(emiNo);
-            outputAmount = (int) paymentDetails.getTotalAmountWithLumpSum();
-            emisLeft =  paymentDetails.getEmiLeft();
+            PaymentReceipt paymentReceipt = currentLoan.payEMI(emiNo);
+            outputAmount = (int) paymentReceipt.getTotalAmountWithLumpSum();
+            emisLeft =  paymentReceipt.getEmiLeft();
         }
         consoleWriter.writeToConsole(splitInput, outputAmount, emisLeft);
     }
 
-    private BorrowerDetails getCurrentBorrowerDetails(String bankDetails) {
-        AtomicReference<BorrowerDetails> currentBorrower = new AtomicReference<>();
-        borrowerDetails.forEach((loanId, currentBorrowerDetails) -> {
+    private Loan getCurrentBorrowerDetails(String bankDetails) {
+        AtomicReference<Loan> currentBorrower = new AtomicReference<>();
+        borrowerDetails.forEach((loanId, currentLoan) -> {
             if (loanId.contentEquals(bankDetails)) {
-                currentBorrower.set(currentBorrowerDetails);
+                currentBorrower.set(currentLoan);
             }
         });
         return currentBorrower.get();

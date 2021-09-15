@@ -5,3 +5,6 @@ public class ConsoleWriter {
         System.out.println(splitInput[1] + " " + splitInput[2] + " " + output + " " + emiLeft);
     }
 }
+
+//console.writeToConsole
+//print.toConsole

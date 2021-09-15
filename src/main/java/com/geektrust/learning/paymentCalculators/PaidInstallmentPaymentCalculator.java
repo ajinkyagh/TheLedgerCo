@@ -1,44 +1,43 @@
 package com.geektrust.learning.paymentCalculators;
 
-import com.geektrust.learning.BorrowerDetails;
-import com.geektrust.learning.ConsoleWriter;
-import com.geektrust.learning.PaymentDetails;
+import com.geektrust.learning.Loan;
+import com.geektrust.learning.PaymentReceipt;
 
 public class PaidInstallmentPaymentCalculator {
-    private final BorrowerDetails currentBorrowerDetails;
-    private final PaymentDetails paymentDetails;
+    private final Loan currentLoan;
+    private final PaymentReceipt paymentReceipt;
     private final float emiNo;
     private final int finalEmiNumber;
 
-    public PaidInstallmentPaymentCalculator(BorrowerDetails currentBorrowerDetails, PaymentDetails paymentDetails,
+    public PaidInstallmentPaymentCalculator(Loan currentLoan, PaymentReceipt paymentReceipt,
                                             float emiNo, int finalEmiNumber) {
-        this.currentBorrowerDetails = currentBorrowerDetails;
-        this.paymentDetails = paymentDetails;
+        this.currentLoan = currentLoan;
+        this.paymentReceipt = paymentReceipt;
         this.emiNo = emiNo;
         this.finalEmiNumber = finalEmiNumber;
     }
 
     public float[] calculate() {
         float[] output = new float[2];
-        if (isPaymentCalculationForFutureMonth(emiNo, paymentDetails.getEmiNo())) {
-            output = new FuturePaymentCalculator(currentBorrowerDetails, paymentDetails, finalEmiNumber).calculate();
-        } else if (isPaymentCalculationForCurrentMonth(emiNo, paymentDetails)) {
-            float totalAmountPaidSoFar = paymentDetails.getTotalAmountWithLumpSum();
-            float totalAmountLeft = currentBorrowerDetails.getTotalAmountTORepay() - totalAmountPaidSoFar;
-            float emiLeft = (float) Math.ceil(totalAmountLeft / currentBorrowerDetails.getTotalAmountToPayPerMonth());
+        if (isPaymentCalculationForFutureMonth(emiNo, paymentReceipt.getEmiNo())) {
+            output = new FuturePaymentCalculator(currentLoan, paymentReceipt, finalEmiNumber).calculate();
+        } else if (isPaymentCalculationForCurrentMonth(emiNo, paymentReceipt)) {
+            float totalAmountPaidSoFar = paymentReceipt.getTotalAmountWithLumpSum();
+            float totalAmountLeft = currentLoan.getTotalAmountTORepay() - totalAmountPaidSoFar;
+            float emiLeft = (float) Math.ceil(totalAmountLeft / currentLoan.getTotalAmountToPayPerMonth());
             output[0] = totalAmountPaidSoFar;
             output[1] = emiLeft;
         } else {
-            float emiLeft = currentBorrowerDetails.getPeriodInMonths() - emiNo;
-            float totalAmountPaidSoFar = emiNo * currentBorrowerDetails.getTotalAmountToPayPerMonth();
+            float emiLeft = currentLoan.getPeriodInMonths() - emiNo;
+            float totalAmountPaidSoFar = emiNo * currentLoan.getTotalAmountToPayPerMonth();
             output[0] = totalAmountPaidSoFar;
             output[1] = emiLeft;
         }
         return output;
     }
 
-    private boolean isPaymentCalculationForCurrentMonth(float emiNo, PaymentDetails paymentDetails) {
-        return emiNo >= paymentDetails.getEmiNo();
+    private boolean isPaymentCalculationForCurrentMonth(float emiNo, PaymentReceipt paymentReceipt) {
+        return emiNo >= paymentReceipt.getEmiNo();
     }
 
     private boolean isPaymentCalculationForFutureMonth(float emiNo, float emiNo2) {

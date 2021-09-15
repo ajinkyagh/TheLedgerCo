@@ -19,3 +19,5 @@ public class FileReader {
         }
     }
 }
+//file.input
+//operation.selectOperation

@@ -1,13 +1,13 @@
 package com.geektrust.learning;
 
-public class BorrowerDetails {
+public class Loan {
 
     protected final String principal, years, rate;
     private final float totalAmountToPayPerMonth;
     private final float periodInMonths;
     private final float totalAmountTORepay;
 
-    public BorrowerDetails(String principal, String years, String rate, float totalAmountToPayPerMonth, float periodInMonths, float totalAmountToRepay) {
+    public Loan(String principal, String years, String rate, float totalAmountToPayPerMonth, float periodInMonths, float totalAmountToRepay) {
         this.principal = principal;
         this.years = years;
         this.rate = rate;
@@ -28,17 +28,17 @@ public class BorrowerDetails {
         return totalAmountTORepay;
     }
 
-    public PaymentDetails payEMIWithLumpSum(float lumpSum, float emiNumber) {
+    public PaymentReceipt payEMIWithLumpSum(float lumpSum, float emiNumber) {
         return createPaymentReceipt(lumpSum, emiNumber);
     }
 
-    public PaymentDetails payEMI(float emiNo) {
+    public PaymentReceipt payEMI(float emiNo) {
         return createPaymentReceipt(0, emiNo);
     }
 
-    private PaymentDetails createPaymentReceipt(float lumpsumAmount, float emiNo){
+    private PaymentReceipt createPaymentReceipt(float lumpsumAmount, float emiNo){
         float totalAmountPaidSoFar = lumpsumAmount + (totalAmountToPayPerMonth * emiNo);
         int emisLeft = (int) (getPeriodInMonths() - emiNo);
-        return new PaymentDetails(totalAmountPaidSoFar, emiNo, emisLeft);
+        return new PaymentReceipt(totalAmountPaidSoFar, emiNo, emisLeft);
     }
 }
