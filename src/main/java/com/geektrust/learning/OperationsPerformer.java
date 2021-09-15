@@ -1,7 +1,6 @@
 package com.geektrust.learning;
 
 import com.geektrust.learning.paymentCalculators.EMI;
-import com.geektrust.learning.paymentCalculators.EMICalculator;
 import com.geektrust.learning.paymentCalculators.PaidInstallmentPaymentCalculator;
 
 import java.util.HashMap;
@@ -16,7 +15,7 @@ public class OperationsPerformer {
     public void takeLoan(String[] splitInput) {
         String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
         float principal = Float.parseFloat(splitInput[3]), timePeriod = Float.parseFloat(splitInput[4]), rate = Float.parseFloat(splitInput[5]);
-        EMI emi = new EMICalculator(principal, timePeriod, rate).calculate();
+        EMI emi = new EMI(principal, timePeriod, rate);
         borrowerDetails.put(bankDetails, new Loan(Float.toString(principal), Float.toString(timePeriod), Float.toString(rate), emi.getTotalAmountToRepayPerMonth(), emi.getPeriodInMonths(), emi.getTotalAmountToRepay()));
     }
 

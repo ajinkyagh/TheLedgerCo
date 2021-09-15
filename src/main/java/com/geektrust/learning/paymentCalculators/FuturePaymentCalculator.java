@@ -36,4 +36,3 @@ public class FuturePaymentCalculator {
         return output;
     }
 }
-//futurepaymnet.calculate
