@@ -51,7 +51,7 @@ public class OperationsPerformer {
             outputAmount = (int) paymentReceipt.getTotalAmountWithLumpSum();
             emisLeft =  paymentReceipt.getEmiLeft();
         }
-        consoleWriter.writeToConsole(splitInput, outputAmount, emisLeft);
+        consoleWriter.write(splitInput, outputAmount, emisLeft);
     }
 
     private Loan getCurrentBorrowerDetails(String bankDetails) {
