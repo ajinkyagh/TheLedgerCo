@@ -1,11 +1,11 @@
 package com.geektrust.learning;
 
-public class PaymentReceipt {
+public class Receipt {
     private final float emiNo;
     private final float totalAmountWithLumpSum;
     private final int emiLeft;
 
-    public PaymentReceipt(float totalAmountWithLumpSum, float emiNo, int emiLeft) {
+    public Receipt(float totalAmountWithLumpSum, float emiNo, int emiLeft) {
         this.totalAmountWithLumpSum = totalAmountWithLumpSum;
         this.emiNo = emiNo;
         this.emiLeft = emiLeft;

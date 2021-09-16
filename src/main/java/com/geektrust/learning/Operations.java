@@ -1,11 +1,11 @@
 package com.geektrust.learning;
 
-public class OperationSelector {
+public class Operations {
     OperationsPerformer operationsPerformer = new OperationsPerformer();
     String[] splitInput;
     String option;
 
-    public void selectOperation(String input) {
+    public void select(String input) {
 
         splitInput = input.split("\\s");
         option=splitInput[0];

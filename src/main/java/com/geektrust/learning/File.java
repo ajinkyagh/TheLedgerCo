@@ -9,13 +9,13 @@ public class File {
         this.fileName = fileName;
     }
     public void input() throws FileNotFoundException {
-        OperationSelector operationSelector = new OperationSelector();
+        Operations operations = new Operations();
         java.io.FileReader fileReader = new java.io.FileReader(fileName);
         Scanner inFile = new Scanner(fileReader);
 
         while (inFile.hasNext()) {
             String input = inFile.nextLine();
-            operationSelector.selectOperation(input);
+            operations.select(input);
         }
     }
 }
