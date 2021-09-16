@@ -10,7 +10,7 @@ public class OperationsPerformer {
     float totalAmountPaidSoFar;
     HashMap<String, Loan> borrowerDetails = new HashMap<>();
     HashMap<String, PaymentReceipt> paymentDetails = new HashMap<>();
-    ConsoleWriter consoleWriter = new ConsoleWriter();
+    Console console = new Console();
 
     public void takeLoan(String[] splitInput) {
         String bankName = splitInput[1], borrowerName = splitInput[2], bankDetails = bankName + borrowerName;
@@ -51,7 +51,7 @@ public class OperationsPerformer {
             outputAmount = (int) paymentReceipt.getTotalAmountWithLumpSum();
             emisLeft =  paymentReceipt.getEmiLeft();
         }
-        consoleWriter.write(splitInput, outputAmount, emisLeft);
+        console.write(splitInput, outputAmount, emisLeft);
     }
 
     private Loan getCurrentBorrowerDetails(String bankDetails) {
