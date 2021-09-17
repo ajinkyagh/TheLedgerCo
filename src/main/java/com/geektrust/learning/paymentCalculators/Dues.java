@@ -1,18 +1,18 @@
 package com.geektrust.learning.paymentCalculators;
 
 import com.geektrust.learning.Loan;
-import com.geektrust.learning.Receipt;
+import com.geektrust.learning.EMIPaymentReceipt;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dues {
     private final Loan loan;
-    private final Receipt receipt;
+    private final EMIPaymentReceipt EMIPaymentReceipt;
     private final int finalEmiNumber;
 
-    public Dues(Loan loan, Receipt receipt, int finalEmiNumber) {
+    public Dues(Loan loan, EMIPaymentReceipt EMIPaymentReceipt, int finalEmiNumber) {
         this.loan = loan;
-        this.receipt = receipt;
+        this.EMIPaymentReceipt = EMIPaymentReceipt;
         this.finalEmiNumber = finalEmiNumber;
     }
 
@@ -20,8 +20,8 @@ public class Dues {
         float[] output = new float[2];
         int totalAmountPaidSoFar = 0;
         AtomicInteger emiCounter = new AtomicInteger(1);
-        for (int i = (int) receipt.getEmiNo(); i < finalEmiNumber; i++) {
-            totalAmountPaidSoFar = (int) (receipt.getTotalAmountWithLumpSum() + loan.getTotalAmountToPayPerMonth() * emiCounter.get());
+        for (int i = (int) EMIPaymentReceipt.getEmiNo(); i < finalEmiNumber; i++) {
+            totalAmountPaidSoFar = (int) (EMIPaymentReceipt.getTotalAmountWithLumpSum() + loan.getTotalAmountToPayPerMonth() * emiCounter.get());
             emiCounter.getAndIncrement();
         }
         float totalAmountLeft = loan.getTotalAmountTORepay() - totalAmountPaidSoFar;

@@ -28,17 +28,17 @@ public class Loan {
         return totalAmountTORepay;
     }
 
-    public Receipt payEMIWithLumpSum(float lumpSum, float emiNumber) {
+    public EMIPaymentReceipt payEMIWithLumpSum(float lumpSum, float emiNumber) {
         return createPaymentReceipt(lumpSum, emiNumber);
     }
 
-    public Receipt payEMI(float emiNo) {
+    public EMIPaymentReceipt payEMI(float emiNo) {
         return createPaymentReceipt(0, emiNo);
     }
 
-    private Receipt createPaymentReceipt(float lumpsumAmount, float emiNo){
+    private EMIPaymentReceipt createPaymentReceipt(float lumpsumAmount, float emiNo){
         float totalAmountPaidSoFar = lumpsumAmount + (totalAmountToPayPerMonth * emiNo);
         int emisLeft = (int) (getPeriodInMonths() - emiNo);
-        return new Receipt(totalAmountPaidSoFar, emiNo, emisLeft);
+        return new EMIPaymentReceipt(totalAmountPaidSoFar, emiNo, emisLeft);
     }
 }

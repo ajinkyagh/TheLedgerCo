@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class OperationsPerformer {
     float totalAmountPaidSoFar;
     HashMap<String, Loan> borrowerDetails = new HashMap<>();
-    HashMap<String, Receipt> paymentDetails = new HashMap<>();
+    HashMap<String, EMIPaymentReceipt> paymentDetails = new HashMap<>();
     Console console = new Console();
 
     public void takeLoan(String[] splitInput) {
@@ -27,7 +27,7 @@ public class OperationsPerformer {
 
         borrowerDetails.forEach((loanId, loan) -> {
             if (loanId.contentEquals(bankDetails)) {
-                Receipt value = loan.payEMIWithLumpSum(lumpSum, emiNumber);
+                EMIPaymentReceipt value = loan.payEMIWithLumpSum(lumpSum, emiNumber);
                 paymentDetails.put(bankDetails, value);
             }
         });
@@ -47,9 +47,9 @@ public class OperationsPerformer {
             outputAmount = (int) output[0];
             emisLeft = (int) output[1];
         } else {
-            Receipt receipt = currentLoan.payEMI(emiNo);
-            outputAmount = (int) receipt.getTotalAmountWithLumpSum();
-            emisLeft =  receipt.getEmiLeft();
+            EMIPaymentReceipt EMIPaymentReceipt = currentLoan.payEMI(emiNo);
+            outputAmount = (int) EMIPaymentReceipt.getTotalAmountWithLumpSum();
+            emisLeft =  EMIPaymentReceipt.getEmiLeft();
         }
         console.write(splitInput, outputAmount, emisLeft);
     }

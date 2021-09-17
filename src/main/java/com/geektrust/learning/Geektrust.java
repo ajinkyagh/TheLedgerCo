@@ -5,6 +5,6 @@ public class Geektrust {
     public static void main(String[] args) throws FileNotFoundException {
         String fileName = args[0];
         File file = new File(fileName);
-        file.input();
+        file.read();
     }
 }

@@ -8,7 +8,7 @@ public class File {
     public File(String fileName) {
         this.fileName = fileName;
     }
-    public void input() throws FileNotFoundException {
+    public void read() throws FileNotFoundException {
         Operations operations = new Operations();
         java.io.FileReader fileReader = new java.io.FileReader(fileName);
         Scanner inFile = new Scanner(fileReader);
